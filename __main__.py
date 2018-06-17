@@ -4,7 +4,6 @@ from ui import UI
 from pack import Pack
 
 pack = Pack(512, 512, False)
-pack.insert(500, 500)
 pack.insert(256, 256)
 pack.insert(128, 128)
 pack.insert(64, 64)
