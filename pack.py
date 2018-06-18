@@ -54,6 +54,30 @@ class Pack:
 
         return new_node
 
+    def occupancy(self):
+        used_surface_area = 0
+
+        for rect in self.used_rectangles:
+            used_surface_area += rect.w * rect.h
+
+        return used_surface_area / (self.w * self.h)
+
+    def get_max_dimension(self, is_powered=True):
+        max_w = 0
+        max_h = 0
+
+        for rect in self.used_rectangles:
+            w = rect.x + rect.w
+            h = rect.y + rect.h
+            max_w = w if max_w < w else max_w
+            max_h = h if max_h < h else max_h
+
+        if is_powered:
+            max_w = Pack.get_power(max_w)
+            max_h = Pack.get_power(max_h)
+
+        return max_w, max_h
+
     def _find_position(self, w, h):
         best_node = Rect()
         best_area_fit = sys.maxsize
@@ -137,8 +161,28 @@ class Pack:
 
             i += 1
 
-
     @staticmethod
     def _is_contained_in(a: Rect, b:Rect):
         return a.x >= b.x and a.y >= b.y and a.x + a.w <= b.x + b.w and a.y + a.h <= b.y + b.h
 
+    @staticmethod
+    def get_power(n):
+        i = 1
+        m = n
+        m = m >> 1
+
+        while m != 0:
+            i += 1
+            m = m >> 1
+
+        m = 1
+        i -= 1
+
+        while i != 0:
+            m = m << 1
+            i -= 1
+
+        if m < n:
+            m = m << 1
+
+        return m
